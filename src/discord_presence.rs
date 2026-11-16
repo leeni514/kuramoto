@@ -71,7 +71,7 @@ fn lock_presence() -> MutexGuard<'static, PresenceState> {
 fn idle_activity(settings: &AppSettings) -> activity::Activity<'static> {
     let started_at = APP_STARTED_AT.get_or_init(Utc::now);
     let name = if settings.discord_idle_name.trim().is_empty() {
-        "Kakera".to_string()
+        "Kuramoto".to_string()
     } else {
         settings.discord_idle_name.clone()
     };

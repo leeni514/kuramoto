@@ -696,7 +696,7 @@ pub fn DetailView(
                         }
                     }
                     div { class: "previous-playtime",
-                        span { class: "stat-label", "Playtime before Kakera" }
+                        span { class: "stat-label", "Playtime before Kuramoto" }
                         label {
                             input {
                                 r#type: "number",

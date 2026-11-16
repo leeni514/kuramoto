@@ -106,7 +106,7 @@ pub fn SettingsView(
                     span { "Idle name" }
                     input {
                         value: "{discord_idle_name_value}",
-                        placeholder: "Kakera",
+                        placeholder: "Kuramoto",
                         oninput: move |event| {
                             discord_idle_name_draft.set(event.value());
                         },
@@ -164,7 +164,7 @@ pub fn SettingsView(
                     }
                 }
                 p { class: "setting-help",
-                    "Shown on Discord while Kakera is open and no VN is running. The image is also used for VNs without a cover. Images are uploaded to catbox.moe, so anyone with the link can see them."
+                    "Shown on Discord while Kuramoto is open and no VN is running. The image is also used for VNs without a cover. Images are uploaded to catbox.moe, so anyone with the link can see them."
                 }
             }
             div { class: "settings-section",

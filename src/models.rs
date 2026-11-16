@@ -196,7 +196,7 @@ fn default_discord_show_total_playtime() -> bool {
     true
 }
 fn default_discord_idle_name() -> String {
-    "Kakera".to_string()
+    "Kuramoto".to_string()
 }
 impl Default for AppSettings {
     fn default() -> Self {

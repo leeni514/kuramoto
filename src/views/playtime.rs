@@ -5,15 +5,15 @@ use std::cmp::Reverse;
 use std::collections::HashMap;
 ///one colour per game, given out in this order to the most played games
 const GAME_COLORS: [&str; 8] = [
-    "#3987e5", "#d95926", "#199e70", "#c98500", "#d55181", "#008300", "#9085e9", "#e66767",
+    "#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#008300", "#6250d6", "#e34948",
 ];
 ///shared by every game past the first eight
-const OTHER_GAME_COLOR: &str = "#6f7f96";
+const OTHER_GAME_COLOR: &str = "#a8968a";
 ///(days, label) for the range buttons
 const RANGE_OPTIONS: [(i64, &str); 3] = [(7, "7 days"), (30, "30 days"), (90, "90 days")];
 const CHART_HEIGHT_PX: u32 = 260;
-///blue ramp for the activity calendar, from a little playtime to the most
-const ACTIVITY_LEVEL_COLORS: [&str; 4] = ["#184f95", "#256abf", "#3987e5", "#86b6ef"];
+///orange ramp for the activity calendar, from a little playtime to the most
+const ACTIVITY_LEVEL_COLORS: [&str; 4] = ["#ffc999", "#ff9f4d", "#e8700c", "#a84d00"];
 ///how many weeks the activity calendar shows, like github's year
 const ACTIVITY_WEEKS: i64 = 53;
 ///one game's playtime on one day
@@ -274,7 +274,7 @@ pub fn PlaytimeView(vns: Vec<VisualNovel>) -> Element {
                         }
                     }
                     p { class: "setting-help",
-                        "Sessions that cross midnight count toward both days. Playtime from before Kakera isn't included, since it has no dates."
+                        "Sessions that cross midnight count toward both days. Playtime from before Kuramoto isn't included, since it has no dates."
                     }
                 }
             }
@@ -379,10 +379,10 @@ fn DayTooltip(class: String, day: DayPlaytime) -> Element {
         }
     }
 }
-///empty days get the panel colour, the rest step up the blue ramp by share of the busiest day
+///empty days get a faint fill, the rest step up the orange ramp by share of the busiest day
 fn activity_color(seconds: u64, max_seconds: u64) -> &'static str {
     if seconds == 0 || max_seconds == 0 {
-        return "var(--bg-input)";
+        return "var(--activity-empty)";
     }
     let level = ((seconds * 4).div_ceil(max_seconds) as usize).clamp(1, 4);
     ACTIVITY_LEVEL_COLORS[level - 1]

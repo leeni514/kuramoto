@@ -50,7 +50,7 @@ const SORA_FONT: Asset = asset!("/assets/fonts/Sora.ttf");
 fn main() {
     let config = Config::new().with_window(
         WindowBuilder::new()
-            .with_title("Kakera")
+            .with_title("Kuramoto")
             .with_min_inner_size(LogicalSize::new(760.0, 600.0))
             .with_decorations(false),
     );
@@ -75,17 +75,31 @@ enum AppView {
     Settings,
 }
 
-///the kakera shard, a crystal with a chip knocked off the top (same shapes as assets/logo-mark.svg)
+///a flat outline of a hamster (same shapes as assets/logo-mark.svg), drawn in the text colour
 #[component]
-fn KakeraMark() -> Element {
+fn HamsterMark() -> Element {
     rsx! {
         svg {
             class: "logo-mark",
-            view_box: "9 -4 46 67",
+            view_box: "0 0 64 64",
+            fill: "none",
+            stroke: "currentColor",
+            stroke_width: "3.5",
+            stroke_linecap: "round",
+            stroke_linejoin: "round",
             "aria-hidden": "true",
-            polygon { points: "23,14.6 12,30 32,62 30,23", fill: "#2f74e8" }
-            polygon { points: "30,23 32,62 52,30 43,17.4 35.5,19", fill: "#4790ff" }
-            polygon { points: "35,-1.5 45.5,13.9 38,15.5 32.5,19.5 25.5,11.1", fill: "#9cc4ff" }
+            path { d: "M14.8 24.5 A5.2 5.2 0 1 1 22 17.2" }
+            path { d: "M49.2 24.5 A5.2 5.2 0 1 0 42 17.2" }
+            path { d: "M32 15 C45 15 53 23 54 33 C59 37 59 47 52 51.5 C47 57 39 58.5 32 58.5 C25 58.5 17 57 12 51.5 C5 47 5 37 10 33 C11 23 19 15 32 15 Z" }
+            circle { cx: "23.5", cy: "32", r: "2.3", fill: "currentColor", stroke: "none" }
+            circle { cx: "40.5", cy: "32", r: "2.3", fill: "currentColor", stroke: "none" }
+            path { d: "M30.3 36.6 h3.4 l-1.7 1.9 z", fill: "currentColor", stroke_width: "1.5" }
+            path { d: "M32 38.6 v1.6", stroke_width: "2" }
+            rect { x: "30.2", y: "40.4", width: "3.6", height: "3.4", rx: "0.8", stroke_width: "1.8" }
+            path {
+                d: "M19.5 38 L12.8 36.6 M19.5 41.2 L12.8 42.6 M44.5 38 L51.2 36.6 M44.5 41.2 L51.2 42.6",
+                stroke_width: "2",
+            }
         }
     }
 }
@@ -294,7 +308,7 @@ fn App() -> Element {
                             drag_win.drag();
                         },
 
-                        span { class: "win-title", "Kakera" }
+                        span { class: "win-title", "Kuramoto" }
                     }
 
                     //win controls
@@ -357,10 +371,13 @@ fn App() -> Element {
                     //the side bar to the left
                     aside { class: "sidebar",
 
-                        //kakera logo
+                        //kuramoto logo
                         div { class: "logo",
-                            KakeraMark {}
-                            span { class: "logo-wordmark", "kakera" }
+                            HamsterMark {}
+                            div { class: "logo-text",
+                                span { class: "logo-wordmark", "kuramoto" }
+                                span { class: "logo-tagline", "Kuramoto Corporation" }
+                            }
                         }
 
                         nav { class: "sidebar-nav",
@@ -1102,7 +1119,7 @@ fn App() -> Element {
                                                         .set(
                                                             Some(AppNotification {
                                                                 level: NotificationLevel::Error,
-                                                                message: "The Wine prefix has been selected through Flatpak's temporary document portal. Grant Kakera access to the folder, then reselect the real path."
+                                                                message: "The Wine prefix has been selected through Flatpak's temporary document portal. Grant Kuramoto access to the folder, then reselect the real path."
                                                                     .to_string(),
                                                             }),
                                                         );
@@ -1204,7 +1221,7 @@ fn App() -> Element {
                                                         .set(
                                                             Some(AppNotification {
                                                                 level: NotificationLevel::Error,
-                                                                message: "The cover image has been selected through Flatpak's temporary document portal. Grant Kakera access to the folder, then reselect the real path."
+                                                                message: "The cover image has been selected through Flatpak's temporary document portal. Grant Kuramoto access to the folder, then reselect the real path."
                                                                     .to_string(),
                                                             }),
                                                         );
