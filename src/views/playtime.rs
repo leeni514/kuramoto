@@ -5,15 +5,15 @@ use std::cmp::Reverse;
 use std::collections::HashMap;
 ///one colour per game, given out in this order to the most played games
 const GAME_COLORS: [&str; 8] = [
-    "#3987e5", "#d95926", "#199e70", "#c98500", "#d55181", "#008300", "#9085e9", "#e66767",
+    "#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#008300", "#6250d6", "#e34948",
 ];
 ///shared by every game past the first eight
-const OTHER_GAME_COLOR: &str = "#7d6e64";
+const OTHER_GAME_COLOR: &str = "#8d7f74";
 ///(days, label) for the range buttons
 const RANGE_OPTIONS: [(i64, &str); 3] = [(7, "7 days"), (30, "30 days"), (90, "90 days")];
 const CHART_HEIGHT_PX: u32 = 260;
 ///orange ramp for the activity calendar, from a little playtime to the most
-const ACTIVITY_LEVEL_COLORS: [&str; 4] = ["#6b3d1c", "#9a5726", "#d07a3a", "#f2b27a"];
+const ACTIVITY_LEVEL_COLORS: [&str; 4] = ["#e3b48c", "#d48a4f", "#b9612a", "#7a3c14"];
 ///how many weeks the activity calendar shows, like github's year
 const ACTIVITY_WEEKS: i64 = 53;
 ///one game's playtime on one day
