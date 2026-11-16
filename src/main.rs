@@ -24,7 +24,7 @@ use launcher::{ToolLaunch, launch_executable, launch_steam_tool, parse_launch_en
 use logs::{launch_logs_dir, new_launch_log_path, update_latest_launch_log};
 use models::{
     AppNotification, AppSettings, LaunchMode, LibraryFilterMode, LibrarySortMode,
-    NotificationLevel, PlaySession, StoryRoute, VisualNovel, default_umu_game_id,
+    NotificationLevel, PlaySession, StoryRoute, TouchMode, VisualNovel, default_umu_game_id,
 };
 use storage::{
     import_kakera_data_if_new, kuramoto_data_dir, load_library, load_settings, save_library,
@@ -203,6 +203,37 @@ fn App() -> Element {
 
     use_hook(|| refresh_idle_presence(settings.read().clone()));
 
+    //rust can't see touchscreens, so ask the webview once
+    let mut touch_screen_detected = use_signal(|| false);
+    use_hook(move || {
+        spawn(async move {
+            let has_touch = document::eval("return navigator.maxTouchPoints > 0;")
+                .join::<bool>()
+                .await;
+            if let Ok(has_touch) = has_touch {
+                touch_screen_detected.set(has_touch);
+            }
+        });
+    });
+    let touch_active = match settings.read().touch_mode {
+        TouchMode::Auto => *touch_screen_detected.read(),
+        TouchMode::On => true,
+        TouchMode::Off => false,
+    };
+
+    use_hook(|| {
+        if settings.read().open_fullscreen {
+            dioxus::desktop::window().set_fullscreen(true);
+        }
+    });
+
+    //on small screens the detail panel slides over the library, so it only shows while a vn is open
+    let detail_column_class = if selected_vn.is_some() {
+        "detail-column open"
+    } else {
+        "detail-column"
+    };
+
     let mut current_view = use_signal(|| AppView::Library);
     let selected_view = current_view.read().clone();
 
@@ -290,7 +321,7 @@ fn App() -> Element {
             }
 
             main {
-                class: "app-frame",
+                class: if touch_active { "app-frame touch" } else { "app-frame" },
 
                 //window resize handles
                 ResizeHandle { class: "resize-north", direction: ResizeDirection::North }
@@ -642,8 +673,29 @@ fn App() -> Element {
                                     }
                                 }
 
+                                //dims the library behind the detail panel on small screens, tap it to close the panel
+                                if selected_vn.is_some() {
+                                    div {
+                                        class: "detail-backdrop",
+                                        onclick: move |_| {
+                                            selected_vn_id.set(None);
+                                        },
+                                    }
+                                }
+
                                 //the detail side bar (on the right)
-                                aside { class: "detail-column",
+                                aside { class: "{detail_column_class}",
+                                    if selected_vn.is_some() {
+                                        button {
+                                            class: "detail-close",
+                                            title: "Close",
+                                            aria_label: "Close",
+                                            onclick: move |_| {
+                                                selected_vn_id.set(None);
+                                            },
+                                            "×"
+                                        }
+                                    }
                                     //a sidebar that shows details for the vn
                                     if let Some(vn) = selected_vn {
                                         DetailView {
@@ -1364,6 +1416,20 @@ fn App() -> Element {
                             PlaytimeView { vns: vns.read().clone() }
                         } else {
                             SettingsView {
+                                touch_mode: settings.read().touch_mode,
+                                open_fullscreen: settings.read().open_fullscreen,
+
+                                on_touch_mode_change: move |touch_mode| {
+                                    settings.write().touch_mode = touch_mode;
+                                    save_settings_or_log(&settings);
+                                },
+
+                                on_open_fullscreen_change: move |enabled| {
+                                    settings.write().open_fullscreen = enabled;
+                                    save_settings_or_log(&settings);
+                                    dioxus::desktop::window().set_fullscreen(enabled);
+                                },
+
                                 discord_rich_presence_enabled: settings.read().discord_rich_presence_enabled,
                                 data_dir_text,
 

@@ -1,9 +1,12 @@
 use crate::image_upload::IMAGE_EXTENSIONS;
+use crate::models::TouchMode;
 use dioxus::html::HasFileData;
 use dioxus::prelude::*;
 use std::path::PathBuf;
 #[component]
 pub fn SettingsView(
+    touch_mode: TouchMode,
+    open_fullscreen: bool,
     discord_rich_presence_enabled: bool,
     discord_status_text: String,
     discord_show_active_route: bool,
@@ -15,6 +18,8 @@ pub fn SettingsView(
     data_dir_text: String,
     vn_library_folder: Option<String>,
     vn_scan_in_progress: bool,
+    on_touch_mode_change: EventHandler<TouchMode>,
+    on_open_fullscreen_change: EventHandler<bool>,
     on_discord_rich_presence_change: EventHandler<bool>,
     on_discord_status_text_change: EventHandler<String>,
     on_discord_show_active_route_change: EventHandler<bool>,
@@ -40,6 +45,52 @@ pub fn SettingsView(
     rsx! {
         section { class: "settings-panel",
             h2 { "Settings" }
+            div { class: "settings-section",
+                h3 { "Display" }
+                label { class: "setting-row",
+                    span { "Touch mode" }
+                    div { class: "select-shell",
+                        select {
+                            value: match touch_mode {
+                                TouchMode::Auto => "auto",
+                                TouchMode::On => "on",
+                                TouchMode::Off => "off",
+                            },
+                            onchange: move |event| {
+                                on_touch_mode_change
+                                    .call(
+                                        match event.value().as_str() {
+                                            "on" => TouchMode::On,
+                                            "off" => TouchMode::Off,
+                                            _ => TouchMode::Auto,
+                                        },
+                                    );
+                            },
+                            option { value: "auto", "Automatic" }
+                            option { value: "on", "On" }
+                            option { value: "off", "Off" }
+                        }
+                        span { class: "select-chevron", "⌄" }
+                    }
+                }
+                p { class: "setting-help",
+                    "Bigger buttons, edit controls that don't need hovering, and no accidental text selection while scrolling. Automatic turns it on when the device has a touchscreen."
+                }
+                label { class: "setting-row",
+                    span { "Open fullscreen" }
+                    input {
+                        class: "setting-checkbox",
+                        r#type: "checkbox",
+                        checked: open_fullscreen,
+                        onchange: move |event| {
+                            on_open_fullscreen_change.call(event.checked());
+                        },
+                    }
+                }
+                p { class: "setting-help",
+                    "Fills the whole screen, covering the taskbar. Handy on handhelds like the ROG Ally."
+                }
+            }
             div { class: "settings-section",
                 h3 { "Discord Rich Presence" }
                 label { class: "setting-row",

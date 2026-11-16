@@ -164,6 +164,19 @@ impl Default for LibraryFilterMode {
         LibraryFilterMode::All
     }
 }
+///when the touch-friendly layout is used
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq)]
+pub enum TouchMode {
+    ///on when the device has a touchscreen
+    Auto,
+    On,
+    Off,
+}
+impl Default for TouchMode {
+    fn default() -> Self {
+        TouchMode::Auto
+    }
+}
 ///settings set in the settings panel
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct AppSettings {
@@ -188,6 +201,10 @@ pub struct AppSettings {
     pub library_sort_mode: LibrarySortMode,
     #[serde(default)]
     pub library_filter_mode: LibraryFilterMode,
+    #[serde(default)]
+    pub touch_mode: TouchMode,
+    #[serde(default)]
+    pub open_fullscreen: bool,
 }
 fn default_discord_status_text() -> String {
     "Reading".to_string()
@@ -211,6 +228,8 @@ impl Default for AppSettings {
             vn_library_folder: None,
             library_sort_mode: LibrarySortMode::default(),
             library_filter_mode: LibraryFilterMode::default(),
+            touch_mode: TouchMode::default(),
+            open_fullscreen: false,
         }
     }
 }
