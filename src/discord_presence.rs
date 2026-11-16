@@ -6,8 +6,7 @@ use discord_rich_presence::{DiscordIpc, DiscordIpcClient, activity};
 use std::sync::{Mutex, MutexGuard, OnceLock};
 use std::thread;
 use std::time::Duration;
-///still kakera's discord app, swap in a kuramoto app's id once one is made in the discord developer portal
-const DISCORD_APP_ID: &str = "1512156673358172312";
+const DISCORD_APP_ID: &str = "1571748694573977671";
 ///how often the vn presence is resent so the total playtime line stays current
 const PLAYTIME_REFRESH_INTERVAL: Duration = Duration::from_secs(60);
 ///the one discord connection kuramoto keeps open, shared by the idle and vn presence
