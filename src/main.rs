@@ -376,7 +376,7 @@ fn App() -> Element {
                             HamsterMark {}
                             div { class: "logo-text",
                                 span { class: "logo-wordmark", "kuramoto" }
-                                span { class: "logo-tagline", "Kuramoto Corporation" }
+                                span { class: "logo-tagline", "a Kuramoto Corp Product" }
                             }
                         }
 
