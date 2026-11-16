@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 use std::cmp::PartialEq;
-///the way kakera should launch a vn
+///the way kuramoto should launch a vn
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub enum LaunchMode {
     Native,
@@ -50,7 +50,7 @@ pub struct VisualNovel {
     #[serde(default)]
     pub active_route: Option<String>,
     pub play_sessions: Vec<PlaySession>,
-    ///playtime from before the vn was added to kakera, set by the user
+    ///playtime from before the vn was added to kuramoto, set by the user
     #[serde(default)]
     pub previous_playtime_seconds: u64,
 }
@@ -84,7 +84,7 @@ impl VisualNovel {
             previous_playtime_seconds: 0,
         }
     }
-    ///recorded sessions plus any playtime from before kakera
+    ///recorded sessions plus any playtime from before kuramoto
     pub fn total_playtime_seconds(&self) -> u64 {
         self.previous_playtime_seconds
             + self

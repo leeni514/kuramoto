@@ -148,7 +148,7 @@ mod tests {
     }
     #[test]
     fn picks_the_game_executable() {
-        let root = std::env::temp_dir().join(format!("kakera-scan-test-{}", std::process::id()));
+        let root = std::env::temp_dir().join(format!("kuramoto-scan-test-{}", std::process::id()));
         let game = root.join("Steins;Gate");
         fs::create_dir_all(game.join("tools")).unwrap();
         fs::write(game.join("unins000.exe"), vec![0; 5000]).unwrap();

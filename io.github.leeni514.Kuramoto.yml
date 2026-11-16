@@ -1,4 +1,4 @@
-id: xyz.majou.Kakera
+id: io.github.leeni514.Kuramoto
 runtime: org.gnome.Platform
 runtime-version: '49'
 sdk: org.gnome.Sdk
@@ -6,7 +6,7 @@ sdk-extensions:
   - org.freedesktop.Sdk.Extension.rust-stable
 build-options:
   append-path: /usr/lib/sdk/rust-stable/bin
-command: kakera
+command: kuramoto
 
 finish-args:
   - --share=ipc
@@ -18,6 +18,8 @@ finish-args:
   - --filesystem=home
   - --filesystem=/run/media
   - --filesystem=xdg-data/umu:create
+  # read-only access to the Kakera flatpak's data, so the first launch can import its library
+  - --filesystem=~/.var/app/xyz.majou.Kakera/data/kakera:ro
   - --allow=multiarch
   - --allow=per-app-dev-shm
   - --socket=pulseaudio
@@ -76,19 +78,19 @@ modules:
         sha256: 138ce4b8843608a257d4bee88191ca78a989778bcefd8abb3c1d1aaac3ac6fb8
         strip-components: 0
 
-  - name: kakera
+  - name: kuramoto
     buildsystem: simple
 
     build-options:
       env:
-        CARGO_HOME: /run/build/kakera/cargo
+        CARGO_HOME: /run/build/kuramoto/cargo
         RUSTFLAGS: -L native=/app/lib
 
     build-commands:
       - dx build --release --platform linux --cargo-args="--locked --offline"
-      - install -Dm755 target/dx/kakera/release/linux/app/kakera /app/bin/kakera
-      - install -d /app/lib/kakera
-      - cp -a target/dx/kakera/release/linux/app/assets/. /app/lib/kakera/assets/
+      - install -Dm755 target/dx/kuramoto/release/linux/app/kuramoto /app/bin/kuramoto
+      - install -d /app/lib/kuramoto
+      - cp -a target/dx/kuramoto/release/linux/app/assets/. /app/lib/kuramoto/assets/
 
     sources:
       - cargo-sources.json

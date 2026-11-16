@@ -1,5 +1,5 @@
 [package]
-name = "kakera"
+name = "kuramoto"
 version = "0.1.9"
 authors = ["enotan <uminekolover99@gmail.com>"]
 edition = "2024"
@@ -28,14 +28,14 @@ desktop = ["dioxus/desktop"]
 mobile = ["dioxus/mobile"]
 
 [package.metadata.packager]
-product-name = "Kakera"
-identifier = "com.enotan.kakera"
+product-name = "Kuramoto"
+identifier = "io.github.leeni514.kuramoto"
 icons = ["assets/favicon.png", "assets/favicon.ico"]
 before-packaging-command = "dx build --release"
-binaries-dir = "target/dx/kakera/release/linux/app"
+binaries-dir = "target/dx/kuramoto/release/linux/app"
 
 resources = [
-    { src = "target/dx/kakera/release/linux/app/assets", target = "assets" },
+    { src = "target/dx/kuramoto/release/linux/app/assets", target = "assets" },
 ]
 
 [package.metadata.packager.appimage]
@@ -51,7 +51,7 @@ excluded-libraries = [
 ]
 
 files = {
-    "target/dx/kakera/release/linux/app/assets" = "usr/lib/kakera/assets"
+    "target/dx/kuramoto/release/linux/app/assets" = "usr/lib/kuramoto/assets"
 }
 
 [package.metadata.packager.appimage.linuxdeploy-plugins]

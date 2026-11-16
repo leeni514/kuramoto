@@ -1,5 +1,5 @@
 use crate::models::LaunchMode;
-use crate::storage::kakera_data_dir;
+use crate::storage::kuramoto_data_dir;
 use crate::system::find_host_command;
 use std::fs::{self, OpenOptions};
 
@@ -14,7 +14,7 @@ const STEAM_WRAPPER_SCRIPT: &str = r#"#!/usr/bin/env bash
 set -euo pipefail
 
 script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-helper="$script_dir/kakera-steam-helper"
+helper="$script_dir/kuramoto-steam-helper"
 arguments=("$@")
 last_separator=-1
 
@@ -25,13 +25,13 @@ for index in "${!arguments[@]}"; do
 done
 
 if (( last_separator < 0 )); then
-    echo "Kakera wrapper: Steam command did not contain a --
+    echo "Kuramoto wrapper: Steam command did not contain a --
     separator." >&2
     exit 1
 fi
 
 if [[ ! -x "$helper" ]]; then
-    echo "Kakera wrapper: helper is missing or not executable:
+    echo "Kuramoto wrapper: helper is missing or not executable:
     $helper" >&2
     exit 1
 fi
@@ -51,7 +51,7 @@ script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 app_id="${STEAM_COMPAT_APP_ID:-}"
 
 if [[ -z "$app_id" ]]; then
-    echo "Kakera helper: Steam App ID is unavailable." >&2
+    echo "Kuramoto helper: Steam App ID is unavailable." >&2
     exit 1
 fi
 
@@ -61,7 +61,7 @@ log_file="$script_dir/helper-$app_id.log"
 
 
 if [[ "$#" -lt 3 ]]; then
-    echo "Kakera helper: incomplete Proton command." >> "$log_file"
+    echo "Kuramoto helper: incomplete Proton command." >> "$log_file"
     exit 1
 fi
 
@@ -256,7 +256,7 @@ pub fn launch_steam_tool(
         return Ok(ToolLaunch::Process(command.spawn()?));
     }
 
-    let tools_directory = kakera_data_dir()?.join("steam-tools");
+    let tools_directory = kuramoto_data_dir()?.join("steam-tools");
     let active_path = tools_directory.join(format!("active-{app_id}"));
 
     if !active_path.is_file() {
@@ -275,11 +275,11 @@ pub fn launch_steam_tool(
 /// installs the steam tool scripts and returns the steam launch option
 #[cfg(target_os = "linux")]
 pub fn install_steam_tool_wrapper() -> Result<String, io::Error> {
-    let tools_directory = kakera_data_dir()?.join("steam-tools");
+    let tools_directory = kuramoto_data_dir()?.join("steam-tools");
     fs::create_dir_all(&tools_directory)?;
 
-    let wrapper_path = tools_directory.join("kakera-steam-wrapper");
-    let helper_path = tools_directory.join("kakera-steam-helper");
+    let wrapper_path = tools_directory.join("kuramoto-steam-wrapper");
+    let helper_path = tools_directory.join("kuramoto-steam-helper");
 
     write_executable_script(wrapper_path.clone(), STEAM_WRAPPER_SCRIPT.to_string())?;
     write_executable_script(helper_path, STEAM_HELPER_SCRIPT.to_string())?;

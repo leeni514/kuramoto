@@ -27,7 +27,7 @@ use models::{
     NotificationLevel, PlaySession, StoryRoute, VisualNovel, default_umu_game_id,
 };
 use storage::{
-    kakera_data_dir, load_library, load_settings, save_library,
+    import_kakera_data_if_new, kuramoto_data_dir, load_library, load_settings, save_library,
     save_settings,
 };
 use system::{is_flatpak_document_portal_path, open_folder, umu_launcher_is_available};
@@ -124,6 +124,15 @@ fn ResizeHandle(class: String, direction: ResizeDirection) -> Element {
 
 #[component]
 fn App() -> Element {
+    //runs once, before the library is first read, so an imported kakera library shows straight away
+    let kakera_import_count = use_hook(|| match import_kakera_data_if_new() {
+        Ok(import) => import.map(|import| import.vn_count),
+        Err(error) => {
+            println!("Could not import Kakera data: {error}");
+            None
+        }
+    });
+
     let saved_library = match load_library() {
         Ok(library) => library,
         Err(error) => {
@@ -170,7 +179,15 @@ fn App() -> Element {
     let umu_is_available = use_hook(umu_launcher_is_available);
 
     let mut notification = use_signal(|| {
-        if cfg!(target_os = "linux") && !umu_is_available {
+        if let Some(vn_count) = kakera_import_count {
+            let noun = if vn_count == 1 { "visual novel" } else { "visual novels" };
+            Some(AppNotification {
+                level: NotificationLevel::Info,
+                message: format!(
+                    "Imported {vn_count} {noun} and their playtime from Kakera. Kakera's own data was left as it is."
+                ),
+            })
+        } else if cfg!(target_os = "linux") && !umu_is_available {
             Some(AppNotification {
                 level: NotificationLevel::Warning,
                 message: "UMU Launcher was not found. Proton launches will not work until UMU is installed."
@@ -243,7 +260,7 @@ fn App() -> Element {
     let max_win = desktop.clone();
     let close_win = desktop.clone();
 
-    let data_dir_text = match kakera_data_dir() {
+    let data_dir_text = match kuramoto_data_dir() {
         Ok(path) => path.display().to_string(),
         Err(error) => format!("Could not find data folder: {error}"),
     };
@@ -1363,7 +1380,7 @@ fn App() -> Element {
                                 },
 
                                 on_open_data_folder: move |_| {
-                                    match kakera_data_dir() {
+                                    match kuramoto_data_dir() {
                                         Ok(path) => {
                                             if let Err(error) = open_folder(&path) {
                                                 println!("Could not open data folder: {error}");

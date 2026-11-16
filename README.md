@@ -1,56 +1,53 @@
-![Kakera Logo](./assets/kakera-logo.png)
+![Kuramoto Logo](./assets/kuramoto-logo.png)
 
-<h1 align="center">Kakera</h1>
+<h1 align="center">Kuramoto</h1>
 
 <p align="center">
-  <a href="https://github.com/enotan/kakera/releases/latest">
-    <img src="https://img.shields.io/github/v/release/enotan/kakera?label=latest%20release" alt="Latest release">
+  <a href="https://github.com/leeni514/kuramoto/releases/latest">
+    <img src="https://img.shields.io/github/v/release/leeni514/kuramoto?label=latest%20release" alt="Latest release">
   </a>
-  <a href="https://aur.archlinux.org/packages/kakera">
-    <img src="https://img.shields.io/aur/version/kakera?label=AUR" alt="AUR package">
+  <a href="https://github.com/leeni514/kuramoto/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/leeni514/kuramoto" alt="License">
   </a>
-  <a href="https://aur.archlinux.org/packages/kakera-bin">
-    <img src="https://img.shields.io/aur/version/kakera-bin?label=AUR%20binary" alt="AUR binary package">
-  </a>
-  <a href="https://github.com/enotan/kakera/blob/main/LICENSE">
-    <img src="https://img.shields.io/github/license/enotan/kakera" alt="License">
-  </a>
-  <a href="https://github.com/enotan/kakera/releases">
-    <img src="https://img.shields.io/github/downloads/enotan/kakera/total" alt="Release downloads">
+  <a href="https://github.com/leeni514/kuramoto/releases">
+    <img src="https://img.shields.io/github/downloads/leeni514/kuramoto/total" alt="Release downloads">
   </a>
 </p>
 
-Kakera is a visual novel library, launcher, and playtime tracker built with Rust and Dioxus-CLI.
-
-![Screenshot preview](./assets/screenshot.png)
-
-![Rich Presence preview](./assets/richpresencess.png)
+Kuramoto is a visual novel library, launcher, and playtime tracker built with Rust and Dioxus-CLI. It's a fork of [Kakera](https://github.com/enotan/kakera) by enotan, themed after China Kuramoto from Gakuen iDOLM@STER.
 
 ## Overview
 
-Kakera works as a hub for launching and keeping track of all your visual novels.
-The majority of people use Steam as a central launcher for all their games, but many visual novels aren't available on Steam, and many are forced to buy from other sources which can get hard to keep track of. Kakera lets you add visual novels from VNDB, launch them, show a Discord Rich Presence, and track playtime.
+Kuramoto works as a hub for launching and keeping track of all your visual novels.
+The majority of people use Steam as a central launcher for all their games, but many visual novels aren't available on Steam, and many are forced to buy from other sources which can get hard to keep track of. Kuramoto lets you add visual novels from VNDB, launch them, show a Discord Rich Presence, and track playtime.
 
 ## Features
 
 - Add visual novels manually or search from VNDB
-- Browse visual novels in a beautiful cover-art library grid
+- Browse visual novels in a cover-art library grid
 - View and edit descriptions, notes, routes, and cover images
 - Add and track active routes and completed routes
 - Allows running visual novels with Wine for Linux operating systems, with settings to change locale and add custom arguments
 - Track play sessions and total playtime
+- See playtime per day, a summary of games played, and a year-long activity calendar on the Playtime page
 - Caches VN cover images locally so internet connection isn't always required to keep a nice looking library
 - Shows Discord Rich Presence while a VN is running, customizable in settings
 - Stores library and settings as local JSON files
 
+## Coming from Kakera
+
+The first time Kuramoto starts, it looks for a Kakera library on the same computer and copies it over: your visual novels with their playtime and sessions, your settings, and cached covers. Kakera's own data isn't changed, so both apps can stay installed. After the first launch the two keep separate libraries.
+
+If you launch through Steam on Linux, update the Steam launch option to the one shown in Kuramoto's settings, since the wrapper now lives in Kuramoto's data folder.
+
 ## Supported Platforms
 
-Kakera currently supports:
+Kuramoto currently supports:
 
 - Linux
 - Windows
 
-macOS isn't supported just yet, as I don't have access to a Mac. But if you own a Mac and want to see it on Mac, please help out!
+macOS isn't supported yet.
 
 ## Installation
 
@@ -69,9 +66,9 @@ Flatpak is the recommended package for most Linux distributions. It can avoid ce
 ```bash
 # Download the latest .flatpak from Releases
 # Run:
-flatpak install --user ./kakera_*.flatpak
+flatpak install --user ./Kuramoto_*.flatpak
 
-flatpak run xyz.majou.Kakera
+flatpak run io.github.leeni514.Kuramoto
 ```
 
 #### AppImage
@@ -79,70 +76,60 @@ flatpak run xyz.majou.Kakera
 ```bash
 # Download the latest .AppImage from Releases
 # Run:
-chmod +x kakera_*.AppImage
+chmod +x kuramoto_*.AppImage
 
-./kakera_*.AppImage
+./kuramoto_*.AppImage
 
-```
-
-### Arch Linux
-
-```bash
-# Kakera is available on the AUR
-paru -S kakera
-
-# Binary version
-paru -S kakera-bin
 ```
 
 ### NixOS
 
-Run Kakera directly without installing it:
+Run Kuramoto directly without installing it:
 
 ```bash
-nix run github:enotan/kakera
+nix run github:leeni514/kuramoto
 ```
 
-Install Kakera into your user profile:
+Install Kuramoto into your user profile:
 
 ```bash
-nix profile add github:enotan/kakera
+nix profile add github:leeni514/kuramoto
 ```
 
 #### NixOS Flake
 
-Installing Kakera through your NixOS config is recommended, as it installs it as
+Installing Kuramoto through your NixOS config is recommended, as it installs it as
 a system application with its icon and desktop entry.
 
-Add Kakera to your `flake.nix` inputs:
+Add Kuramoto to your `flake.nix` inputs:
 
 ```nix
 {
-    inputs.kakera.url = "github:enotan/kakera";
+    inputs.kuramoto.url = "github:leeni514/kuramoto";
 }
 ```
 
 Pass the input to your NixOS modules:
 ```nix
 outputs =
-    { nixpkgs, kakera, ... }:
+    { nixpkgs, kuramoto, ... }:
     {
         nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
             system = "x86_64-linux";
-            specialArgs = { inherit kakera; };
+            specialArgs = { inherit kuramoto; };
             modules = [ ./configuration.nix ];
         };
     };
 ```
 
-Then add Kakera to `environment.systemPackages` in `configuration.nix`:
+Then add Kuramoto to `environment.systemPackages` in `configuration.nix`:
 
 ```nix
-{ pkgs, kakera, ... }:
+{ pkgs, kuramoto, ... }:
 
 {
     environment.systemPackages = [
-        kakera.packages.${pkgs.stdenv.hostPlatform.system}.default
+        kuramoto.packages.${pkgs.stdenv.hostPlatform.system}.default
     ];
 }
 ```
@@ -187,27 +174,27 @@ discord # obviously. vesktop, betterdiscord, etc should all work too
 ### Building
 
 ```bash
-git clone https://github.com/enotan/kakera
+git clone https://github.com/leeni514/kuramoto
 
-cd kakera
+cd kuramoto
 
 dx build --release
 ```
 
 ## Data Storage
 
-Kakera stores data in the platform app-data directory.
+Kuramoto stores data in the platform app-data directory.
 
 On Linux systems, this is usually:
 
 ```text
-~/.local/share/kakera
+~/.local/share/kuramoto
 ```
 
 On Windows, this is usually:
 
 ```text
-C:\Users\<USER>\AppData\Roaming\kakera
+C:\Users\<USER>\AppData\Roaming\kuramoto
 ```
 
 ## Planned Features
@@ -215,10 +202,7 @@ C:\Users\<USER>\AppData\Roaming\kakera
 - Controller navigation mainly for handheld PCs
 - Windows locale emulator support
 - Fuller notes view with characters (can be imported from VNDB), rich-text formatting and editing (For all the mystery lovers like me)
-- Statistics tab with graphs and visualisations of playtime
 - More themes + custom theming
-- Better UI overall - it's definitely improved a lot but there's still room for improvement
-
 
 ## Tech Stack
 

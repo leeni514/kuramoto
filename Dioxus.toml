@@ -3,7 +3,7 @@
 [web.app]
 
 # HTML title tag content
-title = "kakera"
+title = "kuramoto"
 
 # include `assets` in web platform
 [web.resource]
@@ -21,7 +21,7 @@ script = []
 script = []
 
 [bundle]
-identifier = "com.enotan"
+identifier = "io.github.leeni514.kuramoto"
 
-publisher = "enotan"
+publisher = "leeni514"
 icon = ["assets/favicon.ico"]

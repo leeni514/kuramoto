@@ -1,18 +1,10 @@
+use crate::storage::kuramoto_data_dir;
 use std::fs;
 use std::io;
 use std::path::PathBuf;
 ///returns the folder where cover cache is stored
 pub fn cover_cache_dir() -> Result<PathBuf, io::Error> {
-    let data_dir = match dirs::data_dir() {
-        Some(path) => path,
-        None => {
-            return Err(io::Error::new(
-                io::ErrorKind::NotFound,
-                "Could not find an app data directory",
-            ));
-        }
-    };
-    let cache_dir = data_dir.join("kakera").join("covers");
+    let cache_dir = kuramoto_data_dir()?.join("covers");
     fs::create_dir_all(&cache_dir)?;
     Ok(cache_dir)
 }

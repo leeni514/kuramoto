@@ -19,7 +19,7 @@ pub struct VndbImage {
 struct VndbSearchResponse {
     pub results: Vec<VndbSearchResult>,
 }
-///the json kakera will send to vndb
+///the json kuramoto will send to vndb
 #[derive(Debug, Clone, Serialize)]
 struct VndbSearchRequest {
     pub filters: serde_json::Value,

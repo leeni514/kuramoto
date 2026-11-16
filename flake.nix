@@ -1,5 +1,5 @@
 {
-  description = "Kakera development environment";
+  description = "Kuramoto development environment";
 
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
@@ -23,19 +23,19 @@
       ];
 
       desktopItem = pkgs.makeDesktopItem {
-        name = "kakera";
-        desktopName = "Kakera";
+        name = "kuramoto";
+        desktopName = "Kuramoto";
         comment = "Visual novel library and launcher";
-        exec = "kakera";
-        icon = "kakera";
+        exec = "kuramoto";
+        icon = "kuramoto";
         categories = [
           "Game"
           "Utility"
         ];
       };
 
-      kakeraPackage = pkgs.rustPlatform.buildRustPackage {
-        pname = "kakera";
+      kuramotoPackage = pkgs.rustPlatform.buildRustPackage {
+        pname = "kuramoto";
         version = "0.1.9";
         src = pkgs.lib.cleanSource ./.;
         cargoLock.lockFile = ./Cargo.lock;
@@ -58,30 +58,30 @@
           runHook preInstall
 
           install -Dm755 \
-            target/dx/kakera/release/linux/app/kakera \
-            "$out/bin/kakera"
+            target/dx/kuramoto/release/linux/app/kuramoto \
+            "$out/bin/kuramoto"
 
           mkdir -p "$out/bin/assets"
           cp -r \
-            target/dx/kakera/release/linux/app/assets/. \
+            target/dx/kuramoto/release/linux/app/assets/. \
             "$out/bin/assets/"
 
           install -Dm644 \
             assets/favicon.png \
-            "$out/share/icons/hicolor/256x256/apps/kakera.png"
+            "$out/share/icons/hicolor/256x256/apps/kuramoto.png"
 
           mkdir -p "$out/share/applications"
           cp \
-            ${desktopItem}/share/applications/kakera.desktop \
-            "$out/share/applications/kakera.desktop"
+            ${desktopItem}/share/applications/kuramoto.desktop \
+            "$out/share/applications/kuramoto.desktop"
           runHook postInstall
         '';
 
         meta = {
           description = "Visual novel library, launcher, and playtime tracker";
-          homepage = "https://github.com/enotan/kakera";
+          homepage = "https://github.com/leeni514/kuramoto";
           license = pkgs.lib.licenses.mit;
-          mainProgram = "kakera";
+          mainProgram = "kuramoto";
           platforms = pkgs.lib.platforms.linux;
         };
 
@@ -89,8 +89,8 @@
     in
     {
       packages.${system} = {
-        kakera = kakeraPackage;
-        default = kakeraPackage;
+        kuramoto = kuramotoPackage;
+        default = kuramotoPackage;
       };
       devShells.${system}.default = pkgs.mkShell {
         nativeBuildInputs = with pkgs; [

@@ -35,10 +35,10 @@ jobs:
       - name: Upload Windows artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: kakera-windows
+          name: kuramoto-windows
           path: |
-            target/dx/kakera/bundle/windows/**/*.exe
-            target/dx/kakera/bundle/windows/**/*.msi
+            target/dx/kuramoto/bundle/windows/**/*.exe
+            target/dx/kuramoto/bundle/windows/**/*.msi
 
   linux:
     name: Linux deb/appimage
@@ -76,11 +76,11 @@ jobs:
       - name: Upload Linux artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: kakera-linux
+          name: kuramoto-linux
           path: |
-            target/dx/kakera/bundle/linux/**/*.deb
-            target/dx/kakera/bundle/linux/**/*.AppImage
-            target/dx/kakera/bundle/linux/**/*.appimage
+            target/dx/kuramoto/bundle/linux/**/*.deb
+            target/dx/kuramoto/bundle/linux/**/*.AppImage
+            target/dx/kuramoto/bundle/linux/**/*.appimage
 
   flatpak:
     name: Flatpak bundle
@@ -106,19 +106,19 @@ jobs:
             --install-deps-from=flathub \
             --repo=flatpak-repo \
             flatpak-build \
-            xyz.majou.Kakera.yml
+            io.github.leeni514.Kuramoto.yml
 
       - name: Build Flatpak bundle
         run: |
           flatpak build-bundle \
             flatpak-repo \
-            Kakera_${{ github.ref_name }}_x86_64.flatpak \
-            xyz.majou.Kakera
+            Kuramoto_${{ github.ref_name }}_x86_64.flatpak \
+            io.github.leeni514.Kuramoto
 
       - name: Upload Flatpak artifact
         uses: actions/upload-artifact@v4
         with:
-          name: kakera-flatpak
+          name: kuramoto-flatpak
           path: "*.flatpak"
 
   nix:
@@ -135,7 +135,7 @@ jobs:
         run: nix flake check --no-build
 
       - name: Build Nix package
-        run: nix build .#kakera --print-build-logs
+        run: nix build .#kuramoto --print-build-logs
 
   release:
     name: Publish GitHub release

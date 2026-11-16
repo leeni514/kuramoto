@@ -6,10 +6,11 @@ use discord_rich_presence::{DiscordIpc, DiscordIpcClient, activity};
 use std::sync::{Mutex, MutexGuard, OnceLock};
 use std::thread;
 use std::time::Duration;
+///still kakera's discord app, swap in a kuramoto app's id once one is made in the discord developer portal
 const DISCORD_APP_ID: &str = "1512156673358172312";
 ///how often the vn presence is resent so the total playtime line stays current
 const PLAYTIME_REFRESH_INTERVAL: Duration = Duration::from_secs(60);
-///the one discord connection kakera keeps open, shared by the idle and vn presence
+///the one discord connection kuramoto keeps open, shared by the idle and vn presence
 struct PresenceState {
     client: Option<DiscordIpcClient>,
     running_vn_count: u32,
@@ -22,7 +23,7 @@ static PRESENCE: Mutex<PresenceState> = Mutex::new(PresenceState {
     playing: None,
 });
 static PLAYTIME_REFRESHER: OnceLock<()> = OnceLock::new();
-///when kakera was opened, used as the idle presence start time
+///when kuramoto was opened, used as the idle presence start time
 static APP_STARTED_AT: OnceLock<DateTime<Utc>> = OnceLock::new();
 ///shows the idle presence (or clears it when rich presence is off), unless a vn is running
 pub fn show_idle(settings: &AppSettings) {
