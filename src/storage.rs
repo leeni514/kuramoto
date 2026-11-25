@@ -1,3 +1,4 @@
+use crate::covers::portable_cover_path;
 use crate::models::{AppSettings, VisualNovel};
 use std::path::{Path, PathBuf};
 use std::{fs, io};
@@ -30,12 +31,17 @@ pub fn load_library() -> Result<Vec<VisualNovel>, io::Error> {
             return Err(error);
         }
     };
-    let library = match serde_json::from_str::<Vec<VisualNovel>>(&json_text) {
-        Ok(vns) => vns,
-        Err(error) => {
-            return Err(io::Error::new(io::ErrorKind::InvalidData, error));
+    parse_library(&json_text)
+}
+///parses the library json, making cached cover paths saved by older versions portable
+fn parse_library(json_text: &str) -> Result<Vec<VisualNovel>, io::Error> {
+    let mut library = serde_json::from_str::<Vec<VisualNovel>>(json_text)
+        .map_err(|error| io::Error::new(io::ErrorKind::InvalidData, error))?;
+    for vn in library.iter_mut() {
+        if let Some(cover_path) = vn.cover_path.as_mut() {
+            *cover_path = portable_cover_path(cover_path);
         }
-    };
+    }
     Ok(library)
 }
 ///saves the library to disk as a json
@@ -137,7 +143,7 @@ fn import_kakera_data(kakera_dir: &Path, data_dir: &Path) -> Result<usize, io::E
     let mut library = serde_json::from_str::<Vec<VisualNovel>>(&json_text)
         .map_err(|error| io::Error::new(io::ErrorKind::InvalidData, error))?;
     fs::create_dir_all(data_dir)?;
-    //cached covers are saved as full paths into kakera's folder, so copy them over and point at the copies
+    //kakera saves cached covers as full paths into its folder, so copy them over and keep only the file name
     let kakera_covers_dir = kakera_dir.join("covers");
     let covers_dir = data_dir.join("covers");
     for vn in library.iter_mut() {
@@ -152,9 +158,8 @@ fn import_kakera_data(kakera_dir: &Path, data_dir: &Path) -> Result<usize, io::E
             continue;
         }
         fs::create_dir_all(&covers_dir)?;
-        let new_cover_path = covers_dir.join(file_name);
-        if fs::copy(&cover_path, &new_cover_path).is_ok() {
-            vn.cover_path = Some(new_cover_path.to_string_lossy().to_string());
+        if fs::copy(&cover_path, covers_dir.join(file_name)).is_ok() {
+            vn.cover_path = Some(file_name.to_string_lossy().to_string());
         }
     }
     if let Ok(settings_text) = fs::read_to_string(kakera_dir.join("settings.json"))
@@ -173,6 +178,19 @@ fn import_kakera_data(kakera_dir: &Path, data_dir: &Path) -> Result<usize, io::E
 mod tests {
     use super::*;
     use crate::models::{PlaySession, VisualNovel};
+    #[test]
+    fn loading_makes_cached_cover_paths_portable() {
+        let mut cached = VisualNovel::new(1, "Cached cover".to_string());
+        cached.cover_path = Some(r"C:\Users\noah1\AppData\Roaming\kuramoto\covers\1.jpg".to_string());
+        let mut picked = VisualNovel::new(2, "Picked cover".to_string());
+        picked.cover_path = Some(r"D:\Pictures\my-cover.png".to_string());
+        let no_cover = VisualNovel::new(3, "No cover".to_string());
+        let json_text = serde_json::to_string(&vec![cached, picked, no_cover]).unwrap();
+        let library = parse_library(&json_text).unwrap();
+        assert_eq!(library[0].cover_path, Some("1.jpg".to_string()));
+        assert_eq!(library[1].cover_path, Some(r"D:\Pictures\my-cover.png".to_string()));
+        assert_eq!(library[2].cover_path, None);
+    }
     #[test]
     fn imports_kakera_library_with_playtime_and_covers() {
         let root = std::env::temp_dir().join(format!("kuramoto-import-test-{}", std::process::id()));
@@ -204,7 +222,7 @@ mod tests {
             serde_json::from_str(&fs::read_to_string(data_dir.join("library_json")).unwrap()).unwrap();
         assert_eq!(imported[0].total_playtime_seconds(), 4200);
         let new_cover = data_dir.join("covers").join("1.jpg");
-        assert_eq!(imported[0].cover_path, Some(new_cover.to_string_lossy().to_string()));
+        assert_eq!(imported[0].cover_path, Some("1.jpg".to_string()));
         assert_eq!(fs::read(&new_cover).unwrap(), b"cover");
         assert_eq!(imported[1].cover_path, Some(picked_cover.to_string_lossy().to_string()));
         let imported_settings: AppSettings =

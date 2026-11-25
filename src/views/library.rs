@@ -1,3 +1,4 @@
+use crate::covers::resolve_cover_path;
 use crate::models::VisualNovel;
 use base64::Engine;
 use dioxus::prelude::*;
@@ -121,7 +122,7 @@ fn local_cover_source(path: String) -> Option<String> {
 }
 ///reads a local image file and turns it into data:image/... url
 fn local_path_to_data_url(path: &str) -> Option<String> {
-    let image_bytes = fs::read(path).ok()?;
+    let image_bytes = fs::read(resolve_cover_path(path)).ok()?;
     let mime_type = image_mime_type(path);
     let encoded_image = base64::engine::general_purpose::STANDARD.encode(image_bytes);
     Some(format!("data:{mime_type};base64,{encoded_image}"))
