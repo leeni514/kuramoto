@@ -36,7 +36,7 @@
 
       kuramotoPackage = pkgs.rustPlatform.buildRustPackage {
         pname = "kuramoto";
-        version = "0.2.1";
+        version = "0.2.2";
         src = pkgs.lib.cleanSource ./.;
         cargoLock.lockFile = ./Cargo.lock;
 
